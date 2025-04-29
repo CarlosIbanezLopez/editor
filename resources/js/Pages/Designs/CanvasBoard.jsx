@@ -3,6 +3,7 @@ import { Stage, Layer, Rect, Text, Group, Transformer } from 'react-konva';
 import { router } from '@inertiajs/react';
 import PropertiesPanel from './PropertiesPanel';
 import { Image as KonvaImage } from 'react-konva';
+import useImage from 'use-image';
 import ExportButton from '@/utils/ExportButton';
 
 import Echo from 'laravel-echo';
@@ -85,6 +86,26 @@ export default function CanvasBoard({ initialElements, designId, design }) {
         }
       }
     });
+    const bringToFront = () => {
+      setElements(prev => {
+        const idx = prev.findIndex(el => el.id === selectedId);
+        if (idx === -1) return prev;
+        const el = prev[idx];
+        const rest = prev.filter((_, i) => i !== idx);
+        return [...rest, el];
+      });
+    };
+    
+    const sendToBack = () => {
+      setElements(prev => {
+        const idx = prev.findIndex(el => el.id === selectedId);
+        if (idx === -1) return prev;
+        const el = prev[idx];
+        const rest = prev.filter((_, i) => i !== idx);
+        return [el, ...rest];
+      });
+    };
+    
 
     return () => {
       console.log('🔄 Limpiando conexión WebSocket');
@@ -236,9 +257,13 @@ export default function CanvasBoard({ initialElements, designId, design }) {
         return el;
       });
       setElements(newElements);
-      handleSave(newElements);
+      // handleSave(newElements);
     }
   };
+  function URLImage({ src, ...props }) {
+  const [image] = useImage(src, 'anonymous');
+  return <KonvaImage image={image} {...props} />;
+}
 
   const handleSave = (newElements = elements) => {
     const headers = {
@@ -294,6 +319,7 @@ export default function CanvasBoard({ initialElements, designId, design }) {
         <button onClick={handleSave} className="bg-green-500 hover:bg-green-600 text-white py-1 px-2 rounded">Guardar Diseño</button>
         <button onClick={bringForward} className="bg-yellow-400 hover:bg-yellow-500 text-white py-1 px-2 rounded">Traer Adelante</button>
         <button onClick={sendBackward} className="bg-yellow-400 hover:bg-yellow-500 text-white py-1 px-2 rounded">Enviar Atrás</button>
+        <ExportButton elements={elements} designName={design.name} />
       </div>
 
       <div className="border-2 border-gray-400 rounded bg-white">
@@ -347,7 +373,7 @@ export default function CanvasBoard({ initialElements, designId, design }) {
         </Stage>
       </div>
 
-      <ExportButton elements={elements} designName={design.name} />
+      
     </div>
   );
 }

@@ -53,4 +53,3 @@ export default function ExportButton({ elements, designName }) {
     </button>
   );
 }
-
