@@ -305,22 +305,59 @@ export default function CanvasBoard({ initialElements, designId, design }) {
         }}
         setIsEditing={setIsEditing}
       />
+<div className="flex flex-wrap gap-2 mb-4 text-sm">
+  {[
+    { type: 'button', icon: '🔘' },
+    { type: 'input', icon: '🔤' },
+    { type: 'checkbox', icon: '☑️' },
+    { type: 'select', icon: '⬇️' },
+    { type: 'image', icon: '🖼️' },
+    { type: 'text', icon: '✏️' },
+    { type: 'card', icon: '🃏' },
+    { type: 'grid', icon: '🔲' },
+    { type: 'container', icon: '📦' },
+  ].map(({ type, icon }) => (
+    <button
+      key={type}
+      onClick={() => addElement(type)}
+      className="flex items-center gap-1 bg-slate-100 hover:bg-slate-200 text-gray-700 border border-slate-300 px-2 py-1 rounded shadow-sm transition"
+    >
+      <span>{icon}</span>
+      <span className="capitalize">{type}</span>
+    </button>
+  ))}
 
-      <div className="flex flex-wrap gap-2 mb-4">
-        {['button', 'input', 'checkbox', 'select', 'image', 'text', 'card', 'grid', 'container'].map(type => (
-          <button
-            key={type}
-            onClick={() => addElement(type)}
-            className="bg-blue-500 hover:bg-blue-600 text-white py-1 px-2 rounded capitalize"
-          >
-            {type}
-          </button>
-        ))}
-        <button onClick={handleSave} className="bg-green-500 hover:bg-green-600 text-white py-1 px-2 rounded">Guardar Diseño</button>
-        <button onClick={bringForward} className="bg-yellow-400 hover:bg-yellow-500 text-white py-1 px-2 rounded">Traer Adelante</button>
-        <button onClick={sendBackward} className="bg-yellow-400 hover:bg-yellow-500 text-white py-1 px-2 rounded">Enviar Atrás</button>
-        <ExportButton elements={elements} designName={design.name} />
-      </div>
+  <button
+    onClick={handleSave}
+    className="flex items-center gap-1 bg-emerald-500 hover:bg-emerald-600 text-white px-2 py-1 rounded shadow"
+  >
+    💾 <span></span>
+  </button>
+
+  <button
+    onClick={bringForward}
+    className="flex items-center gap-1 bg-indigo-500 hover:bg-indigo-600 text-white px-2 py-1 rounded shadow"
+  >
+    🔼 <span></span>
+  </button>
+
+  <button
+    onClick={sendBackward}
+    className="flex items-center gap-1 bg-indigo-400 hover:bg-indigo-500 text-white px-2 py-1 rounded shadow"
+  >
+    🔽 <span></span>
+  </button>
+
+  <ExportButton
+    elements={elements}
+    designName={design.name}
+    className="flex items-center gap-1 bg-orange-500 hover:bg-orange-600 text-white px-2 py-1 rounded shadow"
+  >
+    📤 <span>Exportar</span>
+  </ExportButton>
+</div>
+
+
 
       <div className="border-2 border-gray-400 rounded bg-white">
         <Stage
